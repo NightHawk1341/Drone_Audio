@@ -26,8 +26,7 @@ class SimpleCommandParser:
     # Classes de commandes valides
     VALID_COMMANDS = [
         'forward', 'back', 'left', 'right', 
-        'up', 'down', 'yawleft', 'yawright', 
-        'stop', 'none'
+        'up', 'down', 'yawleft', 'yawright', 'none'
     ]
     
     def __init__(self):
@@ -135,7 +134,7 @@ class SimpleCommandParser:
         textgrid_dir: Path,
         audio_dir: Path,
         output_csv: Path,
-        tier_name: str = "Commands",
+        tier_name: str = "commands",
         audio_extension: str = '.wav'
     ) -> pd.DataFrame:
         """
@@ -241,7 +240,7 @@ def pipeline_annotation_vers_modele(
         textgrid_dir=textgrid_path,
         audio_dir=audio_path,
         output_csv=csv_path,
-        tier_name="Commands"
+        tier_name="commands"
     )
     
     # ÉTAPE 2: Split train/test
@@ -465,7 +464,7 @@ if __name__ == "__main__":
         textgrid_dir=Path("/path/to/textgrids"),
         audio_dir=Path("/path/to/audios"),
         output_csv=Path("/path/to/output/dataset.csv"),
-        tier_name="Commands"  # Nom du tier dans vos TextGrid
+        tier_name="commands"  # Nom du tier dans vos TextGrid
     )
     
     # OPTION 2: Pipeline complet automatique
