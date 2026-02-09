@@ -261,9 +261,15 @@ class SimpleCommandParser:
         
         # Convertir en DataFrame
         df = pd.DataFrame(all_segments)
-        
+
+        # Extraire participant_id et numéro d'essai depuis le nom de fichier
+        # e.g. "01_04_25_10_20_56_003.wav" → participant_id="01_04_25_10_20_56", attempt=3
+        stems = df['audio_file'].apply(lambda f: Path(f).stem)
+        df['participant_id'] = stems.apply(lambda s: '_'.join(s.split('_')[:6]))
+        df['attempt'] = stems.apply(lambda s: int(s.split('_')[6]))
+
         # Réorganiser les colonnes
-        df = df[['audio_file', 'start', 'end', 'duration', 'command']]
+        df = df[['audio_file', 'participant_id', 'attempt', 'start', 'end', 'duration', 'command']]
         
         # Sauvegarder
         output_csv.parent.mkdir(exist_ok=True, parents=True)

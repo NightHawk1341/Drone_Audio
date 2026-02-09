@@ -1,14 +1,18 @@
 # VoiceStick pipeline configuration
-# Usage: python pipeline_corrected.py [path/to/config.yaml]
+# Usage:
+#   python prepare_data.py [path/to/config.yaml]
+#   python train_svm.py [path/to/config.yaml]
 
 paths:
   textgrid_dir: "B:\\Document - Disk B\\GitHub\\Drone_Audio\\data\\textgrid"
   audio_dir: "B:\\Document - Disk B\\GitHub\\Drone_Audio\\data\\audio"
-  output_dir: "B:\\drones\\test_1\\output"
+  output_dir: "B:\\Document - Disk B\\GitHub\\Drone_Audio\\output"
 
-pipeline:
-  model_type: "svm"          # "svm" or "mlp"
+data_preparation:
+  tier_name: "commands"
   skip_if_cached: true
+
+training:
   balance_classes: true
   none_ratio: 1.5
-  tier_name: "commands"
+  n_folds: 5
