@@ -1,0 +1,236 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 38.4 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "commands" 
+        xmin = 0 
+        xmax = 38.4 
+        intervals: size = 37 
+        intervals [1]:
+            xmin = 0 
+            xmax = 4.33409 
+            text = "" 
+        intervals [2]:
+            xmin = 4.33409 
+            xmax = 5.547752375440413 
+            text = "none" 
+        intervals [3]:
+            xmin = 5.547752375440413 
+            xmax = 5.869019238382931 
+            text = "" 
+        intervals [4]:
+            xmin = 5.869019238382931 
+            xmax = 6.57847 
+            text = "none" 
+        intervals [5]:
+            xmin = 6.57847 
+            xmax = 8.53597 
+            text = "" 
+        intervals [6]:
+            xmin = 8.53597 
+            xmax = 9.273964982422662 
+            text = "none" 
+        intervals [7]:
+            xmin = 9.273964982422662 
+            xmax = 9.683420483288199 
+            text = "" 
+        intervals [8]:
+            xmin = 9.683420483288199 
+            xmax = 10.56097 
+            text = "forward" 
+        intervals [9]:
+            xmin = 10.56097 
+            xmax = 14.67847 
+            text = "" 
+        intervals [10]:
+            xmin = 14.67847 
+            xmax = 15.248116182149117 
+            text = "none" 
+        intervals [11]:
+            xmin = 15.248116182149117 
+            xmax = 15.697810602852947 
+            text = "" 
+        intervals [12]:
+            xmin = 15.697810602852947 
+            xmax = 15.875652108811865 
+            text = "none" 
+        intervals [13]:
+            xmin = 15.875652108811865 
+            xmax = 16.99034 
+            text = "yawleft" 
+        intervals [14]:
+            xmin = 16.99034 
+            xmax = 18.94784 
+            text = "" 
+        intervals [15]:
+            xmin = 18.94784 
+            xmax = 19.55534 
+            text = "none" 
+        intervals [16]:
+            xmin = 19.55534 
+            xmax = 21.86722 
+            text = "" 
+        intervals [17]:
+            xmin = 21.86722 
+            xmax = 22.71893168649292 
+            text = "none" 
+        intervals [18]:
+            xmin = 22.71893168649292 
+            xmax = 23.242092135338726 
+            text = "" 
+        intervals [19]:
+            xmin = 23.242092135338726 
+            xmax = 23.966108827937834 
+            text = "none" 
+        intervals [20]:
+            xmin = 23.966108827937834 
+            xmax = 24.14828076994664 
+            text = "" 
+        intervals [21]:
+            xmin = 24.14828076994664 
+            xmax = 24.97222 
+            text = "forward" 
+        intervals [22]:
+            xmin = 24.97222 
+            xmax = 26.94659 
+            text = "" 
+        intervals [23]:
+            xmin = 26.94659 
+            xmax = 27.492922874017136 
+            text = "none" 
+        intervals [24]:
+            xmin = 27.492922874017136 
+            xmax = 27.745160947567793 
+            text = "" 
+        intervals [25]:
+            xmin = 27.745160947567793 
+            xmax = 27.99272794568233 
+            text = "none" 
+        intervals [26]:
+            xmin = 27.99272794568233 
+            xmax = 29.17409 
+            text = "yawleft" 
+        intervals [27]:
+            xmin = 29.17409 
+            xmax = 31.77284 
+            text = "" 
+        intervals [28]:
+            xmin = 31.77284 
+            xmax = 32.54909 
+            text = "none" 
+        intervals [29]:
+            xmin = 32.54909 
+            xmax = 33.30847 
+            text = "" 
+        intervals [30]:
+            xmin = 33.30847 
+            xmax = 33.96074806690878 
+            text = "none" 
+        intervals [31]:
+            xmin = 33.96074806690878 
+            xmax = 34.51193496837133 
+            text = "down" 
+        intervals [32]:
+            xmin = 34.51193496837133 
+            xmax = 34.824897022591585 
+            text = "" 
+        intervals [33]:
+            xmin = 34.824897022591585 
+            xmax = 35.48818973452109 
+            text = "none" 
+        intervals [34]:
+            xmin = 35.48818973452109 
+            xmax = 36.154721922077044 
+            text = "" 
+        intervals [35]:
+            xmin = 36.154721922077044 
+            xmax = 37.43926766701095 
+            text = "none" 
+        intervals [36]:
+            xmin = 37.43926766701095 
+            xmax = 37.88159 
+            text = "forward" 
+        intervals [37]:
+            xmin = 37.88159 
+            xmax = 38.4 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "Text" 
+        xmin = 0 
+        xmax = 37.88159 
+        intervals: size = 17 
+        intervals [1]:
+            xmin = 0 
+            xmax = 4.33409 
+            text = "" 
+        intervals [2]:
+            xmin = 4.33409 
+            xmax = 6.57847 
+            text = "stop descends un petit peu" 
+        intervals [3]:
+            xmin = 6.57847 
+            xmax = 8.53597 
+            text = "" 
+        intervals [4]:
+            xmin = 8.53597 
+            xmax = 10.56097 
+            text = "stop va tout droit" 
+        intervals [5]:
+            xmin = 10.56097 
+            xmax = 14.67847 
+            text = "" 
+        intervals [6]:
+            xmin = 14.67847 
+            xmax = 16.99034 
+            text = "stop fais une rotation sur la gauche" 
+        intervals [7]:
+            xmin = 16.99034 
+            xmax = 18.94784 
+            text = "" 
+        intervals [8]:
+            xmin = 18.94784 
+            xmax = 19.55534 
+            text = "encore" 
+        intervals [9]:
+            xmin = 19.55534 
+            xmax = 21.86722 
+            text = "" 
+        intervals [10]:
+            xmin = 21.86722 
+            xmax = 24.97222 
+            text = "encore stop et il va tout droit" 
+        intervals [11]:
+            xmin = 24.97222 
+            xmax = 26.94659 
+            text = "" 
+        intervals [12]:
+            xmin = 26.94659 
+            xmax = 29.17409 
+            text = "stop fais une rotation sur la gauche" 
+        intervals [13]:
+            xmin = 29.17409 
+            xmax = 31.77284 
+            text = "" 
+        intervals [14]:
+            xmin = 31.77284 
+            xmax = 32.54909 
+            text = "encore" 
+        intervals [15]:
+            xmin = 32.54909 
+            xmax = 33.30847 
+            text = "" 
+        intervals [16]:
+            xmin = 33.30847 
+            xmax = 37.88159 
+            text = "stop descends un petit peu encore stop et tout droit" 
+        intervals [17]:
+            xmin = 37.88159 
+            xmax = 38.4 
+            text = "" 

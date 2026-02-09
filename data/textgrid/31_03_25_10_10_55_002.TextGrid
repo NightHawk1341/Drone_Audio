@@ -1,0 +1,208 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 34.38933333333333 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "commands" 
+        xmin = 0 
+        xmax = 34.38933333333333 
+        intervals: size = 32 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.5688934911990441 
+            text = "none" 
+        intervals [2]:
+            xmin = 0.5688934911990441 
+            xmax = 6.20722 
+            text = "" 
+        intervals [3]:
+            xmin = 6.20722 
+            xmax = 6.593073886520099 
+            text = "none" 
+        intervals [4]:
+            xmin = 6.593073886520099 
+            xmax = 7.7672625996389035 
+            text = "" 
+        intervals [5]:
+            xmin = 7.7672625996389035 
+            xmax = 8.387994324824016 
+            text = "forward" 
+        intervals [6]:
+            xmin = 8.387994324824016 
+            xmax = 8.971388803381453 
+            text = "forward" 
+        intervals [7]:
+            xmin = 8.971388803381453 
+            xmax = 10.410882281841372 
+            text = "" 
+        intervals [8]:
+            xmin = 10.410882281841372 
+            xmax = 10.737583189833538 
+            text = "none" 
+        intervals [9]:
+            xmin = 10.737583189833538 
+            xmax = 12.97409 
+            text = "" 
+        intervals [10]:
+            xmin = 12.97409 
+            xmax = 13.265754147006781 
+            text = "none" 
+        intervals [11]:
+            xmin = 13.265754147006781 
+            xmax = 13.61534 
+            text = "up" 
+        intervals [12]:
+            xmin = 13.61534 
+            xmax = 14.944014421509557 
+            text = "" 
+        intervals [13]:
+            xmin = 14.944014421509557 
+            xmax = 15.424731471840884 
+            text = "none" 
+        intervals [14]:
+            xmin = 15.424731471840884 
+            xmax = 15.882112743029914 
+            text = "yawright" 
+        intervals [15]:
+            xmin = 15.882112743029914 
+            xmax = 16.29847 
+            text = "none" 
+        intervals [16]:
+            xmin = 16.29847 
+            xmax = 18.916346012971182 
+            text = "" 
+        intervals [17]:
+            xmin = 18.916346012971182 
+            xmax = 19.336390037532535 
+            text = "none" 
+        intervals [18]:
+            xmin = 19.336390037532535 
+            xmax = 19.401730219130968 
+            text = "" 
+        intervals [19]:
+            xmin = 19.401730219130968 
+            xmax = 19.999126165173784 
+            text = "none" 
+        intervals [20]:
+            xmin = 19.999126165173784 
+            xmax = 20.53409 
+            text = "forward" 
+        intervals [21]:
+            xmin = 20.53409 
+            xmax = 25.09034 
+            text = "" 
+        intervals [22]:
+            xmin = 25.09034 
+            xmax = 25.68383435569956 
+            text = "none" 
+        intervals [23]:
+            xmin = 25.68383435569956 
+            xmax = 26.554911466869104 
+            text = "" 
+        intervals [24]:
+            xmin = 26.554911466869104 
+            xmax = 27.012292738058136 
+            text = "none" 
+        intervals [25]:
+            xmin = 27.012292738058136 
+            xmax = 27.460339697590246 
+            text = "down" 
+        intervals [26]:
+            xmin = 27.460339697590246 
+            xmax = 28.48027747337966 
+            text = "" 
+        intervals [27]:
+            xmin = 28.48027747337966 
+            xmax = 29.217688094276262 
+            text = "yawright" 
+        intervals [28]:
+            xmin = 29.217688094276262 
+            xmax = 31.216166889853895 
+            text = "" 
+        intervals [29]:
+            xmin = 31.216166889853895 
+            xmax = 32.200936769658846 
+            text = "none" 
+        intervals [30]:
+            xmin = 32.200936769658846 
+            xmax = 32.56030776845023 
+            text = "" 
+        intervals [31]:
+            xmin = 32.56030776845023 
+            xmax = 33.25104683106223 
+            text = "forward" 
+        intervals [32]:
+            xmin = 33.25104683106223 
+            xmax = 34.38933333333333 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "Text" 
+        xmin = 0 
+        xmax = 33.24097 
+        intervals: size = 15 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.03097 
+            text = "" 
+        intervals [2]:
+            xmin = 0.03097 
+            xmax = 0.60472 
+            text = "ciao" 
+        intervals [3]:
+            xmin = 0.60472 
+            xmax = 6.20722 
+            text = "" 
+        intervals [4]:
+            xmin = 6.20722 
+            xmax = 8.97472 
+            text = "stop avancez tout droit" 
+        intervals [5]:
+            xmin = 8.97472 
+            xmax = 12.97409 
+            text = "" 
+        intervals [6]:
+            xmin = 12.97409 
+            xmax = 13.61534 
+            text = "plus" 
+        intervals [7]:
+            xmin = 13.61534 
+            xmax = 14.91472 
+            text = "" 
+        intervals [8]:
+            xmin = 14.91472 
+            xmax = 16.29847 
+            text = "et un peu sur la droite stop" 
+        intervals [9]:
+            xmin = 16.29847 
+            xmax = 18.89722 
+            text = "" 
+        intervals [10]:
+            xmin = 18.89722 
+            xmax = 20.53409 
+            text = "parfait bougez plus et avancez" 
+        intervals [11]:
+            xmin = 20.53409 
+            xmax = 25.09034 
+            text = "" 
+        intervals [12]:
+            xmin = 25.09034 
+            xmax = 29.24159 
+            text = "un peu plus en bas et sur la droite" 
+        intervals [13]:
+            xmin = 29.24159 
+            xmax = 31.18222 
+            text = "" 
+        intervals [14]:
+            xmin = 31.18222 
+            xmax = 33.24097 
+            text = "nickel bougez plus avancez" 
+        intervals [15]:
+            xmin = 33.24097 
+            xmax = 34.389333 
+            text = "" 

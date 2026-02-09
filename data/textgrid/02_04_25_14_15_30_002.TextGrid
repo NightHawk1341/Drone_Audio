@@ -1,0 +1,128 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 20.714666666666666 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "commands" 
+        xmin = 0 
+        xmax = 20.714666666666666 
+        intervals: size = 22 
+        intervals [1]:
+            xmin = 0 
+            xmax = 2.909415982414838 
+            text = "" 
+        intervals [2]:
+            xmin = 2.909415982414838 
+            xmax = 3.56598998628394 
+            text = "none" 
+        intervals [3]:
+            xmin = 3.56598998628394 
+            xmax = 4.51972 
+            text = "forward" 
+        intervals [4]:
+            xmin = 4.51972 
+            xmax = 7.52347 
+            text = "" 
+        intervals [5]:
+            xmin = 7.52347 
+            xmax = 8.434605984927359 
+            text = "none" 
+        intervals [6]:
+            xmin = 8.434605984927359 
+            xmax = 8.708220498239566 
+            text = "" 
+        intervals [7]:
+            xmin = 8.708220498239566 
+            xmax = 9.218616801918106 
+            text = "up" 
+        intervals [8]:
+            xmin = 9.218616801918106 
+            xmax = 10.392002118622381 
+            text = "" 
+        intervals [9]:
+            xmin = 10.392002118622381 
+            xmax = 10.939231145246797 
+            text = "none" 
+        intervals [10]:
+            xmin = 10.939231145246797 
+            xmax = 11.160227482922041 
+            text = "" 
+        intervals [11]:
+            xmin = 11.160227482922041 
+            xmax = 11.828478313511471 
+            text = "forward" 
+        intervals [12]:
+            xmin = 11.828478313511471 
+            xmax = 12.889308021591138 
+            text = "" 
+        intervals [13]:
+            xmin = 12.889308021591138 
+            xmax = 13.431275230651856 
+            text = "none" 
+        intervals [14]:
+            xmin = 13.431275230651856 
+            xmax = 13.562820669744264 
+            text = "" 
+        intervals [15]:
+            xmin = 13.562820669744264 
+            xmax = 14.667802358120484 
+            text = "yawright" 
+        intervals [16]:
+            xmin = 14.667802358120484 
+            xmax = 16.105405167427516 
+            text = "" 
+        intervals [17]:
+            xmin = 16.105405167427516 
+            xmax = 16.945491766504208 
+            text = "none" 
+        intervals [18]:
+            xmin = 16.945491766504208 
+            xmax = 16.94729597761892 
+            text = "" 
+        intervals [19]:
+            xmin = 16.94729597761892 
+            xmax = 17.341932294896143 
+            text = "forward" 
+        intervals [20]:
+            xmin = 17.341932294896143 
+            xmax = 18.613907472557774 
+            text = "" 
+        intervals [21]:
+            xmin = 18.613907472557774 
+            xmax = 19.234801943919464 
+            text = "none" 
+        intervals [22]:
+            xmin = 19.234801943919464 
+            xmax = 20.714666666666666 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "Text" 
+        xmin = 0 
+        xmax = 19.23472 
+        intervals: size = 5 
+        intervals [1]:
+            xmin = 0 
+            xmax = 2.89972 
+            text = "" 
+        intervals [2]:
+            xmin = 2.89972 
+            xmax = 4.51972 
+            text = "stop va tout droit" 
+        intervals [3]:
+            xmin = 4.51972 
+            xmax = 7.52347 
+            text = "" 
+        intervals [4]:
+            xmin = 7.52347 
+            xmax = 19.23472 
+            text = "ok stop monte stop va tout droit stop fait une rotation sur la droite stop et tout droit et stop" 
+        intervals [5]:
+            xmin = 19.23472 
+            xmax = 20.714667 
+            text = "" 

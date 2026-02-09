@@ -1,0 +1,100 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 20.88533333333333 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "commands" 
+        xmin = 0 
+        xmax = 20.88533333333333 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0 
+            xmax = 3.28784 
+            text = "" 
+        intervals [2]:
+            xmin = 3.28784 
+            xmax = 4.496583125370835 
+            text = "none" 
+        intervals [3]:
+            xmin = 4.496583125370835 
+            xmax = 5.17784 
+            text = "forward" 
+        intervals [4]:
+            xmin = 5.17784 
+            xmax = 7.92847 
+            text = "" 
+        intervals [5]:
+            xmin = 7.92847 
+            xmax = 9.126811240722663 
+            text = "none" 
+        intervals [6]:
+            xmin = 9.126811240722663 
+            xmax = 9.858941327338123 
+            text = "down" 
+        intervals [7]:
+            xmin = 9.858941327338123 
+            xmax = 13.183207666565078 
+            text = "none" 
+        intervals [8]:
+            xmin = 13.183207666565078 
+            xmax = 14.291296446307395 
+            text = "yawleft" 
+        intervals [9]:
+            xmin = 14.291296446307395 
+            xmax = 15.32023602749669 
+            text = "none" 
+        intervals [10]:
+            xmin = 15.32023602749669 
+            xmax = 15.91034 
+            text = "forward" 
+        intervals [11]:
+            xmin = 15.91034 
+            xmax = 18.40784 
+            text = "" 
+        intervals [12]:
+            xmin = 18.40784 
+            xmax = 18.96472 
+            text = "none" 
+        intervals [13]:
+            xmin = 18.96472 
+            xmax = 20.88533333333333 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "Text" 
+        xmin = 0 
+        xmax = 18.96472 
+        intervals: size = 7 
+        intervals [1]:
+            xmin = 0 
+            xmax = 3.28784 
+            text = "" 
+        intervals [2]:
+            xmin = 3.28784 
+            xmax = 5.17784 
+            text = "stop tout droit" 
+        intervals [3]:
+            xmin = 5.17784 
+            xmax = 7.92847 
+            text = "" 
+        intervals [4]:
+            xmin = 7.92847 
+            xmax = 15.91034 
+            text = "stop descends stop fais une petite rotation sur la gauche stop tout droit" 
+        intervals [5]:
+            xmin = 15.91034 
+            xmax = 18.40784 
+            text = "" 
+        intervals [6]:
+            xmin = 18.40784 
+            xmax = 18.96472 
+            text = "et stop" 
+        intervals [7]:
+            xmin = 18.96472 
+            xmax = 20.885333 
+            text = "" 

@@ -1,0 +1,31 @@
+F1-score macro: 0.821
+F1-score weighted: 0.889
+
+Rapport de classification:
+              precision    recall  f1-score   support
+
+    backward       0.73      0.81      0.77        27
+        down       0.75      0.96      0.84        67
+     forward       0.87      0.95      0.91       213
+        left       0.83      0.82      0.83        55
+        none       0.97      0.89      0.93       761
+       right       0.73      0.79      0.76        42
+          up       0.83      0.93      0.88        59
+     yawleft       0.80      0.82      0.81        45
+    yawright       0.63      0.69      0.66        65
+
+    accuracy                           0.89      1334
+   macro avg       0.80      0.85      0.82      1334
+weighted avg       0.90      0.89      0.89      1334
+
+
+Matrice de confusion:
+[[ 22   1   0   0   4   0   0   0   0]
+ [  0  64   2   0   1   0   0   0   0]
+ [  1   1 203   0   3   1   1   0   3]
+ [  0   0   0  45   2   0   1   6   1]
+ [  6  19  20   2 680   6   9   2  17]
+ [  0   0   2   0   3  33   0   0   4]
+ [  0   0   0   0   4   0  55   0   0]
+ [  0   0   0   7   0   0   0  37   1]
+ [  1   0   7   0   6   5   0   1  45]]

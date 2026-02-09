@@ -1,0 +1,212 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 33.77066666666666 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "commands" 
+        xmin = 0 
+        xmax = 33.77066666666666 
+        intervals: size = 31 
+        intervals [1]:
+            xmin = 0 
+            xmax = 3.50722 
+            text = "" 
+        intervals [2]:
+            xmin = 3.50722 
+            xmax = 4.384096058797807 
+            text = "none" 
+        intervals [3]:
+            xmin = 4.384096058797807 
+            xmax = 5.16097 
+            text = "" 
+        intervals [4]:
+            xmin = 5.16097 
+            xmax = 7.89472 
+            text = "" 
+        intervals [5]:
+            xmin = 7.89472 
+            xmax = 9.35808050246684 
+            text = "none" 
+        intervals [6]:
+            xmin = 9.35808050246684 
+            xmax = 10.02097 
+            text = "up" 
+        intervals [7]:
+            xmin = 10.02097 
+            xmax = 12.07972 
+            text = "" 
+        intervals [8]:
+            xmin = 12.07972 
+            xmax = 12.654895551342971 
+            text = "none" 
+        intervals [9]:
+            xmin = 12.654895551342971 
+            xmax = 13.107250724180368 
+            text = "" 
+        intervals [10]:
+            xmin = 13.107250724180368 
+            xmax = 14.37472 
+            text = "yawleft" 
+        intervals [11]:
+            xmin = 14.37472 
+            xmax = 15.40409 
+            text = "" 
+        intervals [12]:
+            xmin = 15.40409 
+            xmax = 16.028894651065755 
+            text = "none" 
+        intervals [13]:
+            xmin = 16.028894651065755 
+            xmax = 16.65284 
+            text = "" 
+        intervals [14]:
+            xmin = 16.65284 
+            xmax = 17.314535668603618 
+            text = "none" 
+        intervals [15]:
+            xmin = 17.314535668603618 
+            xmax = 17.56055339418185 
+            text = "" 
+        intervals [16]:
+            xmin = 17.56055339418185 
+            xmax = 18.084333067993573 
+            text = "forward" 
+        intervals [17]:
+            xmin = 18.084333067993573 
+            xmax = 19.004915524995994 
+            text = "none" 
+        intervals [18]:
+            xmin = 19.004915524995994 
+            xmax = 19.687416312083993 
+            text = "" 
+        intervals [19]:
+            xmin = 19.687416312083993 
+            xmax = 20.846080439000836 
+            text = "none" 
+        intervals [20]:
+            xmin = 20.846080439000836 
+            xmax = 21.36097 
+            text = "forward" 
+        intervals [21]:
+            xmin = 21.36097 
+            xmax = 23.79097 
+            text = "" 
+        intervals [22]:
+            xmin = 23.79097 
+            xmax = 24.99518484254346 
+            text = "none" 
+        intervals [23]:
+            xmin = 24.99518484254346 
+            xmax = 26.08597 
+            text = "yawleft" 
+        intervals [24]:
+            xmin = 26.08597 
+            xmax = 28.53284 
+            text = "" 
+        intervals [25]:
+            xmin = 28.53284 
+            xmax = 29.198267233445026 
+            text = "none" 
+        intervals [26]:
+            xmin = 29.198267233445026 
+            xmax = 29.55213510953151 
+            text = "" 
+        intervals [27]:
+            xmin = 29.55213510953151 
+            xmax = 29.68199488057242 
+            text = "none" 
+        intervals [28]:
+            xmin = 29.68199488057242 
+            xmax = 30.18659 
+            text = "forward" 
+        intervals [29]:
+            xmin = 30.18659 
+            xmax = 31.971937822999497 
+            text = "" 
+        intervals [30]:
+            xmin = 31.971937822999497 
+            xmax = 32.53682782702746 
+            text = "none" 
+        intervals [31]:
+            xmin = 32.53682782702746 
+            xmax = 33.77066666666666 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "Text" 
+        xmin = 0 
+        xmax = 32.38034 
+        intervals: size = 17 
+        intervals [1]:
+            xmin = 0 
+            xmax = 3.50722 
+            text = "" 
+        intervals [2]:
+            xmin = 3.50722 
+            xmax = 5.16097 
+            text = "stop pas tout droit" 
+        intervals [3]:
+            xmin = 5.16097 
+            xmax = 7.89472 
+            text = "" 
+        intervals [4]:
+            xmin = 7.89472 
+            xmax = 10.02097 
+            text = "stop monte" 
+        intervals [5]:
+            xmin = 10.02097 
+            xmax = 12.07972 
+            text = "" 
+        intervals [6]:
+            xmin = 12.07972 
+            xmax = 14.37472 
+            text = "stop je fais une rotation sur la gauche" 
+        intervals [7]:
+            xmin = 14.37472 
+            xmax = 15.40409 
+            text = "" 
+        intervals [8]:
+            xmin = 15.40409 
+            xmax = 16.028894651065755 
+            text = "encore" 
+        intervals [9]:
+            xmin = 16.028894651065755 
+            xmax = 16.65284 
+            text = "" 
+        intervals [10]:
+            xmin = 16.65284 
+            xmax = 21.36097 
+            text = "stop descends un tout petit peu stop et va tout droit" 
+        intervals [11]:
+            xmin = 21.36097 
+            xmax = 23.79097 
+            text = "" 
+        intervals [12]:
+            xmin = 23.79097 
+            xmax = 26.08597 
+            text = "stop fais une rotation sur la gauche" 
+        intervals [13]:
+            xmin = 26.08597 
+            xmax = 28.53284 
+            text = "" 
+        intervals [14]:
+            xmin = 28.53284 
+            xmax = 30.18659 
+            text = "stop et va tout droit" 
+        intervals [15]:
+            xmin = 30.18659 
+            xmax = 32.14409 
+            text = "" 
+        intervals [16]:
+            xmin = 32.14409 
+            xmax = 32.38034 
+            text = "tac" 
+        intervals [17]:
+            xmin = 32.38034 
+            xmax = 33.770667 
+            text = "" 

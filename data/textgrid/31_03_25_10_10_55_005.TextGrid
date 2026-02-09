@@ -1,0 +1,112 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 17.386666666666667 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "commands" 
+        xmin = 0 
+        xmax = 17.386666666666667 
+        intervals: size = 18 
+        intervals [1]:
+            xmin = 0 
+            xmax = 1.3612289087345182 
+            text = "" 
+        intervals [2]:
+            xmin = 1.3612289087345182 
+            xmax = 2.559247398871688 
+            text = "none" 
+        intervals [3]:
+            xmin = 2.559247398871688 
+            xmax = 3.4989922058122342 
+            text = "" 
+        intervals [4]:
+            xmin = 3.4989922058122342 
+            xmax = 4.17529296637354 
+            text = "none" 
+        intervals [5]:
+            xmin = 4.17529296637354 
+            xmax = 5.180082667778908 
+            text = "yawleft" 
+        intervals [6]:
+            xmin = 5.180082667778908 
+            xmax = 5.325004259327759 
+            text = "" 
+        intervals [7]:
+            xmin = 5.325004259327759 
+            xmax = 6.059273656508606 
+            text = "none" 
+        intervals [8]:
+            xmin = 6.059273656508606 
+            xmax = 6.56166850721129 
+            text = "" 
+        intervals [9]:
+            xmin = 6.56166850721129 
+            xmax = 6.9094803269285325 
+            text = "none" 
+        intervals [10]:
+            xmin = 6.9094803269285325 
+            xmax = 7.281260626163767 
+            text = "" 
+        intervals [11]:
+            xmin = 7.281260626163767 
+            xmax = 7.61941100644442 
+            text = "none" 
+        intervals [12]:
+            xmin = 7.61941100644442 
+            xmax = 8.295711767005725 
+            text = "down" 
+        intervals [13]:
+            xmin = 8.295711767005725 
+            xmax = 8.99159 
+            text = "forward" 
+        intervals [14]:
+            xmin = 8.99159 
+            xmax = 15.85972 
+            text = "" 
+        intervals [15]:
+            xmin = 15.85972 
+            xmax = 16.209005107227362 
+            text = "none" 
+        intervals [16]:
+            xmin = 16.209005107227362 
+            xmax = 16.614785563564144 
+            text = "" 
+        intervals [17]:
+            xmin = 16.614785563564144 
+            xmax = 17.097857535393647 
+            text = "none" 
+        intervals [18]:
+            xmin = 17.097857535393647 
+            xmax = 17.386666666666667 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "Text" 
+        xmin = 0 
+        xmax = 17.07472 
+        intervals: size = 5 
+        intervals [1]:
+            xmin = 0 
+            xmax = 1.66784 
+            text = "" 
+        intervals [2]:
+            xmin = 1.66784 
+            xmax = 8.99159 
+            text = "ok stop pivotez sur la gauche encore stop maintenant baissez vous et avancez" 
+        intervals [3]:
+            xmin = 8.99159 
+            xmax = 15.85972 
+            text = "" 
+        intervals [4]:
+            xmin = 15.85972 
+            xmax = 17.07472 
+            text = "et stop" 
+        intervals [5]:
+            xmin = 17.07472 
+            xmax = 17.386667 
+            text = "" 
