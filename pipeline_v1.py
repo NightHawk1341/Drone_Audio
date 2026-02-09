@@ -62,7 +62,7 @@ def pipeline_annotation_vers_modele(
         none_ratio: Ratio max de "none" vs classe majoritaire non-none
         tier_name: Nom du tier TextGrid contenant les commandes
     """
-    from parser_simple_v1 import SimpleCommandParser
+    from prepare_data import SimpleCommandParser
     from sklearn.model_selection import train_test_split
     
     print("=" * 80)

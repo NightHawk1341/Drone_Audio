@@ -12,6 +12,8 @@ Usage:
 
 from pathlib import Path
 import sys
+import warnings
+from typing import List, Dict
 import pandas as pd
 import numpy as np
 import yaml
@@ -19,7 +21,196 @@ import soundfile as sf
 import librosa
 from tqdm import tqdm
 
-from parser_simple_v1 import SimpleCommandParser
+
+# =============================================================================
+# TEXTGRID PARSER
+# =============================================================================
+
+class SimpleCommandParser:
+    """
+    Parser pour TextGrid avec annotations directes de commandes.
+    Gere l'encodage UTF-16 avec BOM (courant sous Praat/Windows).
+    """
+
+    VALID_COMMANDS = [
+        'forward', 'backward', 'left', 'right',
+        'up', 'down', 'yawleft', 'yawright', 'none'
+    ]
+
+    def _detect_encoding(self, file_path: Path) -> str:
+        """Detecte l'encodage du fichier (UTF-8 ou UTF-16)."""
+        try:
+            with open(file_path, 'rb') as f:
+                first_bytes = f.read(4)
+            if first_bytes[:2] in (b'\xff\xfe', b'\xfe\xff'):
+                return 'utf-16'
+            return 'utf-8'
+        except Exception:
+            return 'utf-8'
+
+    def _parse_textgrid_manual(self, tg_path: Path) -> Dict:
+        """Parse manuellement un fichier TextGrid (UTF-8 / UTF-16)."""
+        encoding = self._detect_encoding(tg_path)
+
+        try:
+            with open(tg_path, 'r', encoding=encoding) as f:
+                lines = f.readlines()
+        except Exception as e:
+            try:
+                with open(tg_path, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+            except Exception:
+                raise ValueError(f"Impossible de lire {tg_path}: {e}")
+
+        tiers: List[Dict] = []
+        current_tier = None
+        current_interval = None
+
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+
+            if 'class = "IntervalTier"' in line or 'class = " I n t e r v a l T i e r "' in line:
+                if current_tier:
+                    tiers.append(current_tier)
+                current_tier = {'name': None, 'intervals': []}
+
+            elif 'name =' in line:
+                parts = line.split('=')
+                if len(parts) > 1:
+                    name = parts[1].strip().strip('"').replace(' ', '')
+                    if current_tier is not None:
+                        current_tier['name'] = name.lower()
+
+            elif line.startswith('xmin') and 'intervals:' not in ''.join(lines[max(0, i-5):i]):
+                if current_interval and current_tier:
+                    current_tier['intervals'].append(current_interval)
+                try:
+                    xmin = float(line.split('=')[1].strip())
+                    current_interval = {'xmin': xmin, 'xmax': None, 'text': ''}
+                except (IndexError, ValueError):
+                    current_interval = None
+
+            elif line.startswith('xmax') and current_interval is not None:
+                try:
+                    current_interval['xmax'] = float(line.split('=')[1].strip())
+                except (IndexError, ValueError):
+                    pass
+
+            elif line.startswith('text') and current_interval is not None:
+                parts = line.split('=', 1)
+                if len(parts) > 1:
+                    current_interval['text'] = parts[1].strip().strip('"').replace(' ', '')
+
+            i += 1
+
+        if current_interval and current_tier:
+            current_tier['intervals'].append(current_interval)
+        if current_tier:
+            tiers.append(current_tier)
+
+        return {'tiers': tiers}
+
+    def parse_annotated_textgrid(self, tg_path: Path, tier_name: str = "commands") -> List[Dict]:
+        """Parse un TextGrid et retourne les segments de commandes."""
+        try:
+            tg = self._parse_textgrid_manual(tg_path)
+        except Exception as e:
+            warnings.warn(f"Erreur lors du parsing de {tg_path}: {e}")
+            return []
+
+        command_tier = None
+        tier_name_lower = tier_name.lower()
+        for tier in tg['tiers']:
+            if tier['name'] and tier['name'].lower() == tier_name_lower:
+                command_tier = tier
+                break
+
+        if not command_tier:
+            available = [t['name'] for t in tg['tiers'] if t['name']]
+            warnings.warn(f"Tier '{tier_name}' non trouve dans {tg_path}. Disponibles: {available}")
+            return []
+
+        segments = []
+        for interval in command_tier['intervals']:
+            command = interval['text'].strip().lower()
+            if not command:
+                continue
+            if command not in self.VALID_COMMANDS:
+                warnings.warn(f"Commande invalide '{command}' a {interval['xmin']:.2f}s dans {tg_path.name}")
+                continue
+            segments.append({
+                'start': interval['xmin'],
+                'end': interval['xmax'],
+                'duration': interval['xmax'] - interval['xmin'],
+                'command': command,
+            })
+        return segments
+
+    def create_dataset_from_annotations(
+        self,
+        textgrid_dir: Path,
+        audio_dir: Path,
+        output_csv: Path,
+        tier_name: str = "commands",
+        audio_extension: str = '.wav',
+    ) -> pd.DataFrame:
+        """Cree un dataset CSV a partir d'annotations TextGrid."""
+        all_segments = []
+
+        if not textgrid_dir.exists():
+            raise FileNotFoundError(f"Le repertoire n'existe pas: {textgrid_dir}")
+
+        textgrids = list(textgrid_dir.glob('*.TextGrid'))
+        if not textgrids:
+            textgrids = list(textgrid_dir.glob('*.textgrid'))
+        if not textgrids:
+            textgrids = [f for f in textgrid_dir.iterdir() if 'textgrid' in f.name.lower()]
+        if not textgrids:
+            raise FileNotFoundError(f"Aucun fichier TextGrid dans {textgrid_dir}")
+
+        print(f"  Traitement de {len(textgrids)} fichier(s) TextGrid...")
+
+        for tg_file in sorted(textgrids):
+            audio_file = tg_file.stem + audio_extension
+            audio_path = audio_dir / audio_file
+
+            if not audio_path.exists():
+                warnings.warn(f"Fichier audio manquant: {audio_path}")
+
+            segments = self.parse_annotated_textgrid(tg_file, tier_name)
+            if not segments:
+                warnings.warn(f"Aucun segment valide dans {tg_file.name}")
+                continue
+
+            for seg in segments:
+                seg['audio_file'] = audio_file
+                all_segments.append(seg)
+
+            print(f"    {tg_file.name}: {len(segments)} segments")
+
+        if not all_segments:
+            raise ValueError("Aucun segment trouve dans les fichiers TextGrid")
+
+        df = pd.DataFrame(all_segments)
+
+        # Extraire participant_id et attempt depuis le nom de fichier
+        stems = df['audio_file'].apply(lambda f: Path(f).stem)
+        df['participant_id'] = stems.apply(lambda s: '_'.join(s.split('_')[:6]))
+        df['attempt'] = stems.apply(lambda s: int(s.split('_')[6]))
+
+        df = df[['audio_file', 'participant_id', 'attempt', 'start', 'end', 'duration', 'command']]
+
+        output_csv.parent.mkdir(exist_ok=True, parents=True)
+        df.to_csv(output_csv, index=False, encoding='utf-8')
+
+        print(f"\n  Dataset: {len(df)} segments, {df['audio_file'].nunique()} fichiers")
+        print(f"  Distribution:")
+        for cmd, count in df['command'].value_counts().items():
+            pct = (count / len(df)) * 100
+            print(f"    {cmd:12s}: {count:4d} ({pct:5.1f}%)")
+
+        return df
 
 
 # =============================================================================
