@@ -19,7 +19,7 @@ import soundfile as sf
 import librosa
 from tqdm import tqdm
 
-from parser_simple import SimpleCommandParser
+from parser_simple_v1 import SimpleCommandParser
 
 
 # =============================================================================
