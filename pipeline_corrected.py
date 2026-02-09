@@ -3,8 +3,10 @@
 # Corrections: alignement embeddings/labels, cache modèle, équilibrage classes
 # =============================================================================
 from pathlib import Path
+import sys
 import pandas as pd
 import numpy as np
+import yaml
 import joblib
 from tqdm import tqdm
 
@@ -44,11 +46,12 @@ def pipeline_annotation_vers_modele(
     model_type: str = 'svm',
     skip_if_cached: bool = True,
     balance_classes: bool = True,
-    none_ratio: float = 1.5  # Ratio de "none" par rapport à la classe majoritaire non-none
+    none_ratio: float = 1.5,  # Ratio de "none" par rapport à la classe majoritaire non-none
+    tier_name: str = 'commands'
 ):
     """
     Pipeline complet: TextGrid annotés → Modèle entraîné
-    
+
     Args:
         textgrid_dir: Dossier contenant les TextGrid
         audio_dir: Dossier contenant les WAV
@@ -57,6 +60,7 @@ def pipeline_annotation_vers_modele(
         skip_if_cached: Si True, réutilise les fichiers existants
         balance_classes: Si True, sous-échantillonne la classe "none"
         none_ratio: Ratio max de "none" vs classe majoritaire non-none
+        tier_name: Nom du tier TextGrid contenant les commandes
     """
     from parser_simple_final import SimpleCommandParser
     from sklearn.model_selection import train_test_split
@@ -83,7 +87,7 @@ def pipeline_annotation_vers_modele(
             textgrid_dir=textgrid_path,
             audio_dir=audio_path,
             output_csv=config.dataset_csv,
-            tier_name="commands"
+            tier_name=tier_name
         )
     
     print(f"  Total segments: {len(df)}")
@@ -656,50 +660,48 @@ def predire_commande(audio_path: str, model, le, scaler, wav2vec_model=None, fea
 
 
 # =============================================================================
+# CONFIGURATION YAML
+# =============================================================================
+
+def load_config(path: str = None) -> dict:
+    """
+    Charge la configuration depuis un fichier YAML.
+
+    Args:
+        path: Chemin vers le fichier YAML. Si None, utilise config.yaml
+              dans le même répertoire que ce script.
+
+    Returns:
+        Dictionnaire de configuration
+    """
+    if path is None:
+        path = Path(__file__).parent / "config.yaml"
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"Fichier de configuration introuvable: {path}")
+    with open(path, 'r', encoding='utf-8') as f:
+        return yaml.safe_load(f)
+
+
+# =============================================================================
 # EXEMPLE D'UTILISATION
 # =============================================================================
 
 if __name__ == "__main__":
-    # Configuration
-    TEXTGRID_DIR = r"B:\drones\test_1\data"
-    AUDIO_DIR = r"B:\drones\test_1\data"
-    OUTPUT_DIR = r"B:\drones\test_1\output"
-    
-    # Option 1: Entraînement complet (utilise le cache si disponible)
+    # Charger la configuration YAML (optionnel: chemin en argument CLI)
+    config_path = sys.argv[1] if len(sys.argv) > 1 else None
+    cfg = load_config(config_path)
+
+    paths = cfg["paths"]
+    pipeline_cfg = cfg.get("pipeline", {})
+
     model, le, config = pipeline_annotation_vers_modele(
-        textgrid_dir=TEXTGRID_DIR,
-        audio_dir=AUDIO_DIR,
-        output_dir=OUTPUT_DIR,
-        model_type='svm', # ou 'mlp'
-        skip_if_cached=True,      # Réutilise les fichiers existants
-        balance_classes=True,      # Sous-échantillonne "none"
-        none_ratio=1.5            # "none" aura max 1.5x la classe majoritaire
+        textgrid_dir=paths["textgrid_dir"],
+        audio_dir=paths["audio_dir"],
+        output_dir=paths["output_dir"],
+        model_type=pipeline_cfg.get("model_type", "svm"),
+        skip_if_cached=pipeline_cfg.get("skip_if_cached", True),
+        balance_classes=pipeline_cfg.get("balance_classes", True),
+        none_ratio=pipeline_cfg.get("none_ratio", 1.5),
+        tier_name=pipeline_cfg.get("tier_name", "commands"),
     )
-    
-    # Option 2: Charger un modèle existant pour debug
-    """
-    config = PipelineConfig(OUTPUT_DIR)
-    model, le, scaler = charger_modele(config, model_type='svm')
-    
-    # Charger les données de test
-    test_data = np.load(config.embeddings_test_npz)
-    X_test = test_data['embeddings']
-    y_test = test_data['labels']
-    
-    # Évaluer
-    evaluer_modele(model, le, X_test, y_test, config)
-    """
-    
-    # Option 3: Prédire une commande pour un fichier audio
-    """
-    config = PipelineConfig(OUTPUT_DIR)
-    model, le, scaler = charger_modele(config, model_type='svm')
-    
-    commande = predire_commande(
-        audio_path="chemin/vers/audio.wav",
-        model=model,
-        le=le,
-        scaler=scaler
-    )
-    print(f"Commande prédite: {commande}")
-    """
