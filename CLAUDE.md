@@ -49,7 +49,7 @@ training:
   2. Segment audio to 16 kHz WAV clips in `audio_segments/` (filename-based segment IDs preserve original recording names)
   3. Extract embeddings via `LeBenchmark/wav2vec2-FR-7K-large` (mean-pooled) → `all_embeddings.npz`
 
-- **`train_svm.py`** — SVM training with speaker-independent 5-fold `GroupKFold` cross-validation (grouped by `participant_id`). Per-fold: class balancing, `StandardScaler`, `SVC(kernel='rbf', C=10, class_weight='balanced')`. Reports per-fold and average F1 metrics, trains final model on all data. Saves `model_svm.pkl`, `scaler.pkl`, `label_encoder.pkl`, `cv_results_svm.json`.
+- **`train_svm.py`** — SVM training with speaker-independent 5-fold `GroupKFold` cross-validation (grouped by `participant_id`). Per-fold: class balancing, `StandardScaler`, `SVC(kernel='rbf', C=10, class_weight='balanced')`. Reports per-fold and average F1 metrics, trains final model on all data. Saves all artifacts to `output_dir/SVM_model/`: `model_svm.pkl`, `scaler.pkl`, `label_encoder.pkl`, `cv_results_svm.json`, `confusion_matrix_svm.png`, `svm_output.txt`.
 
 - **`config.yaml`** — Centralized configuration for paths, data preparation, and training settings.
 
