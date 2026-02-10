@@ -270,8 +270,9 @@ if __name__ == "__main__":
             print(f"ERREUR: {f} introuvable. Lancez d'abord: python prepare_data.py")
             sys.exit(1)
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    tee = Tee(output_dir / "svm_output.txt")
+    svm_dir = output_dir / "SVM_model"
+    svm_dir.mkdir(parents=True, exist_ok=True)
+    tee = Tee(svm_dir / "svm_output.txt")
     sys.stdout = tee
 
     print("=" * 60)
@@ -303,7 +304,7 @@ if __name__ == "__main__":
     # Save confusion matrix
     save_confusion_matrix(
         all_y_true, all_y_pred, le_cv.classes_,
-        output_dir / "confusion_matrix_svm.png",
+        svm_dir / "confusion_matrix_svm.png",
     )
 
     # Train final model
@@ -314,13 +315,13 @@ if __name__ == "__main__":
     )
 
     # Save artifacts
-    joblib.dump(svm, output_dir / "model_svm.pkl")
-    joblib.dump(le, output_dir / "label_encoder.pkl")
-    joblib.dump(scaler, output_dir / "scaler.pkl")
+    joblib.dump(svm, svm_dir / "model_svm.pkl")
+    joblib.dump(le, svm_dir / "label_encoder.pkl")
+    joblib.dump(scaler, svm_dir / "scaler.pkl")
 
-    print(f"\n  Modele sauvegarde: {output_dir / 'model_svm.pkl'}")
-    print(f"  Scaler:           {output_dir / 'scaler.pkl'}")
-    print(f"  Label encoder:    {output_dir / 'label_encoder.pkl'}")
+    print(f"\n  Modele sauvegarde: {svm_dir / 'model_svm.pkl'}")
+    print(f"  Scaler:           {svm_dir / 'scaler.pkl'}")
+    print(f"  Label encoder:    {svm_dir / 'label_encoder.pkl'}")
 
     # Save CV results summary
     summary = {
@@ -340,11 +341,11 @@ if __name__ == "__main__":
         ],
     }
     import json
-    with open(output_dir / "cv_results_svm.json", 'w', encoding='utf-8') as f:
+    with open(svm_dir / "cv_results_svm.json", 'w', encoding='utf-8') as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
-    print(f"  CV results:       {output_dir / 'cv_results_svm.json'}")
+    print(f"  CV results:       {svm_dir / 'cv_results_svm.json'}")
 
-    print(f"  Output log:       {output_dir / 'svm_output.txt'}")
+    print(f"  Output log:       {svm_dir / 'svm_output.txt'}")
 
     print("\n" + "=" * 60)
     print("TRAINING TERMINE")
