@@ -15,13 +15,16 @@ Usage:
 from pathlib import Path
 import sys
 import numpy as np
-import pandas as pd
 import yaml
 import joblib
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import GroupKFold
-from sklearn.metrics import f1_score, classification_report
+from sklearn.metrics import f1_score, classification_report, confusion_matrix
 
 
 # =============================================================================
@@ -165,6 +168,50 @@ def print_cv_summary(fold_results, le):
         target_names=le.classes_, zero_division=0,
     ))
 
+    return all_y_true, all_y_pred
+
+
+# =============================================================================
+# CONFUSION MATRIX
+# =============================================================================
+
+def save_confusion_matrix(y_true, y_pred, class_names, output_path):
+    """Plot and save a confusion matrix as PNG."""
+    cm = confusion_matrix(y_true, y_pred)
+    fig, ax = plt.subplots(figsize=(10, 8))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=class_names, yticklabels=class_names, ax=ax)
+    ax.set_xlabel('Predicted')
+    ax.set_ylabel('True')
+    ax.set_title('Confusion Matrix — SVM (aggregated CV)')
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
+    print(f"  Confusion matrix: {output_path}")
+
+
+# =============================================================================
+# OUTPUT TEE
+# =============================================================================
+
+class Tee:
+    """Write to both stdout and a file simultaneously."""
+    def __init__(self, filepath):
+        self.file = open(filepath, 'w', encoding='utf-8')
+        self.stdout = sys.stdout
+
+    def write(self, data):
+        self.stdout.write(data)
+        self.file.write(data)
+
+    def flush(self):
+        self.stdout.flush()
+        self.file.flush()
+
+    def close(self):
+        self.file.close()
+        sys.stdout = self.stdout
+
 
 # =============================================================================
 # FINAL MODEL
@@ -223,6 +270,10 @@ if __name__ == "__main__":
             print(f"ERREUR: {f} introuvable. Lancez d'abord: python prepare_data.py")
             sys.exit(1)
 
+    output_dir.mkdir(parents=True, exist_ok=True)
+    tee = Tee(output_dir / "svm_output.txt")
+    sys.stdout = tee
+
     print("=" * 60)
     print("TRAIN SVM — 5-fold GroupKFold cross-validation")
     print("=" * 60)
@@ -247,7 +298,13 @@ if __name__ == "__main__":
         balance_classes=balance,
         none_ratio=none_ratio,
     )
-    print_cv_summary(fold_results, le_cv)
+    all_y_true, all_y_pred = print_cv_summary(fold_results, le_cv)
+
+    # Save confusion matrix
+    save_confusion_matrix(
+        all_y_true, all_y_pred, le_cv.classes_,
+        output_dir / "confusion_matrix_svm.png",
+    )
 
     # Train final model
     svm, le, scaler = train_final_model(
@@ -287,6 +344,10 @@ if __name__ == "__main__":
         json.dump(summary, f, indent=2, ensure_ascii=False)
     print(f"  CV results:       {output_dir / 'cv_results_svm.json'}")
 
+    print(f"  Output log:       {output_dir / 'svm_output.txt'}")
+
     print("\n" + "=" * 60)
     print("TRAINING TERMINE")
     print("=" * 60)
+
+    tee.close()
