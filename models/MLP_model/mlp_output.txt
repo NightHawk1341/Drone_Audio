@@ -1,0 +1,65 @@
+============================================================
+TRAIN MLP — GroupKFold cross-validation (speaker-independent)
+============================================================
+
+Chargement des donnees...
+  Embeddings:   (7539, 1024)
+  Labels:       7539
+  Participants: 49
+
+Lancement du 5-fold GroupKFold...
+
+  --- Fold 1/5 ---
+  Test participants (10): [np.str_('01_04_25_14_31_12'), np.str_('02_04_25_13_12_58'), np.str_('02_04_25_14_15_30'), np.str_('02_04_25_16_25_21'), np.str_('09_04_25_13_19_13'), np.str_('10_04_25_10_36_50'), np.str_('10_04_25_11_21_05'), np.str_('10_04_25_15_16_49'), np.str_('31_03_25_11_05_01'), np.str_('31_03_25_16_18_26')]
+  Train: 6022 samples | Test: 1517 samples
+  Balancing: 6022 -> 4111 (none subsampled)
+  F1-macro: 0.709  |  F1-weighted: 0.845
+
+  --- Fold 2/5 ---
+  Test participants (10): [np.str_('01_04_25_13_16_07'), np.str_('01_04_25_15_07_47'), np.str_('02_04_25_11_17_05'), np.str_('02_04_25_15_10_26'), np.str_('02_04_25_15_18_45'), np.str_('09_04_25_10_33_16'), np.str_('10_04_25_15_23_44'), np.str_('31_03_25_10_19_55'), np.str_('31_03_25_13_23_10'), np.str_('31_03_25_16_06_35')]
+  Train: 6010 samples | Test: 1529 samples
+  Balancing: 6010 -> 3944 (none subsampled)
+  F1-macro: 0.650  |  F1-weighted: 0.761
+
+  --- Fold 3/5 ---
+  Test participants (10): [np.str_('01_04_25_15_58_31'), np.str_('02_04_25_10_14_36'), np.str_('02_04_25_11_21_52'), np.str_('02_04_25_13_19_06'), np.str_('09_04_25_11_18_44'), np.str_('09_04_25_13_28_44'), np.str_('10_04_25_13_14_05'), np.str_('10_04_25_15_53_11'), np.str_('10_04_25_16_00_12'), np.str_('31_03_25_14_17_08')]
+  Train: 6016 samples | Test: 1523 samples
+  Balancing: 6016 -> 4250 (none subsampled)
+  F1-macro: 0.020  |  F1-weighted: 0.008
+
+  --- Fold 4/5 ---
+  Test participants (9): [np.str_('01_04_25_11_19_02'), np.str_('01_04_25_11_28_32'), np.str_('01_04_25_14_37_21'), np.str_('09_04_25_11_11_47'), np.str_('09_04_25_14_15_28'), np.str_('10_04_25_13_05_45'), np.str_('31_03_25_09_25_59'), np.str_('31_03_25_13_29_25'), np.str_('31_03_25_15_14_17')]
+  Train: 6088 samples | Test: 1451 samples
+  Balancing: 6088 -> 4025 (none subsampled)
+  F1-macro: 0.024  |  F1-weighted: 0.010
+
+  --- Fold 5/5 ---
+  Test participants (10): [np.str_('01_04_25_10_27_14'), np.str_('01_04_25_14_02_53'), np.str_('01_04_25_14_09_37'), np.str_('01_04_25_15_17_09'), np.str_('02_04_25_10_24_28'), np.str_('02_04_25_14_19_42'), np.str_('09_04_25_10_21_56'), np.str_('09_04_25_14_20_05'), np.str_('31_03_25_11_15_00'), np.str_('31_03_25_15_19_41')]
+  Train: 6020 samples | Test: 1519 samples
+  Balancing: 6020 -> 4139 (none subsampled)
+  F1-macro: 0.024  |  F1-weighted: 0.008
+
+============================================================
+CROSS-VALIDATION SUMMARY
+============================================================
+
+  Mean F1-macro:    0.285 +/- 0.322
+  Mean F1-weighted: 0.326 +/- 0.390
+
+  Per-class report (aggregated across folds):
+              precision    recall  f1-score   support
+
+    backward       0.76      0.25      0.38       152
+        down       0.62      0.31      0.42       384
+     forward       0.77      0.37      0.50      1229
+        left       0.16      0.27      0.20       322
+        none       0.89      0.35      0.50      4265
+       right       0.06      0.58      0.11       251
+          up       0.76      0.31      0.44       342
+     yawleft       0.06      0.39      0.10       239
+    yawright       0.26      0.25      0.25       355
+
+    accuracy                           0.35      7539
+   macro avg       0.48      0.34      0.32      7539
+weighted avg       0.73      0.35      0.44      7539
+

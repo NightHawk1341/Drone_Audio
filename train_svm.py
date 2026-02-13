@@ -5,7 +5,7 @@
 Trains an SVM classifier on pre-extracted wav2vec2 embeddings using
 GroupKFold cross-validation grouped by participant.
 
-Requires: output from prepare_data.py (dataset.csv + all_embeddings.npz)
+Requires: output from prepare_data.py (train/dataset_train.csv + train/all_embeddings.npz)
 
 Usage:
     python train_svm.py                    # uses config.yaml in same directory
@@ -150,11 +150,6 @@ def print_cv_summary(fold_results, le):
     print("CROSS-VALIDATION SUMMARY")
     print("=" * 60)
 
-    for r in fold_results:
-        print(f"  Fold {r['fold']}: F1-macro={r['f1_macro']:.3f}  "
-              f"F1-weighted={r['f1_weighted']:.3f}  "
-              f"(test={r['test_size']})")
-
     print(f"\n  Mean F1-macro:    {np.mean(f1_macros):.3f} +/- {np.std(f1_macros):.3f}")
     print(f"  Mean F1-weighted: {np.mean(f1_weights):.3f} +/- {np.std(f1_weights):.3f}")
 
@@ -261,9 +256,10 @@ if __name__ == "__main__":
     none_ratio = train_cfg.get("none_ratio", 1.5)
     n_folds = train_cfg.get("n_folds", 5)
 
-    # Paths to prepared data
-    dataset_csv = output_dir / "dataset.csv"
-    embeddings_file = output_dir / "all_embeddings.npz"
+    # Paths to prepared data (read from train/ subdirectory)
+    train_dir = output_dir / "train"
+    dataset_csv = train_dir / "dataset_train.csv"
+    embeddings_file = train_dir / "all_embeddings.npz"
 
     for f in [dataset_csv, embeddings_file]:
         if not f.exists():
@@ -287,8 +283,8 @@ if __name__ == "__main__":
     segment_ids = data['segment_ids']
     participant_ids = data['participant_ids']
 
-    print(f"  Embeddings: {X.shape}")
-    print(f"  Labels:     {len(y)}")
+    print(f"  Embeddings:   {X.shape}")
+    print(f"  Labels:       {len(y)}")
     print(f"  Participants: {len(np.unique(participant_ids))}")
 
     # Cross-validation

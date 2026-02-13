@@ -29,11 +29,14 @@ import numpy as np
 
 from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.metrics import f1_score, confusion_matrix
+from sklearn.metrics import f1_score, classification_report, confusion_matrix
 from sklearn.neural_network import MLPClassifier
 
 import joblib
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 # =============================================================================
@@ -65,6 +68,7 @@ class Tee:
 
     def close(self):
         self.file.close()
+        sys.stdout = self.console
 
 
 
@@ -154,9 +158,11 @@ def train_one_fold_mlp(
     """
     # éventuel downsampling de 'none'
     if balance_classes:
+        n_before = len(y_train)
         X_train, y_train = downsample_none_class(
             X_train, y_train, none_label="none", none_ratio=none_ratio
         )
+        print(f"  Balancing: {n_before} -> {len(y_train)} (none subsampled)")
 
     # encodage labels (string -> int)
     le = LabelEncoder()
@@ -210,41 +216,38 @@ def run_cross_validation_mlp(
     le_global.fit(y)
 
     for fold_idx, (train_idx, test_idx) in enumerate(gkf.split(X, y, participant_ids)):
-        print("\n" + "-" * 60)
-        print(f"FOLD {fold_idx + 1}/{n_folds}")
-
         X_train, X_test = X[train_idx], X[test_idx]
         y_train, y_test = y[train_idx], y[test_idx]
 
         test_participants = np.unique(participant_ids[test_idx])
+        print(f"\n  --- Fold {fold_idx + 1}/{n_folds} ---")
         print(f"  Test participants ({len(test_participants)}): {list(test_participants)}")
+        print(f"  Train: {len(y_train)} samples | Test: {len(y_test)} samples")
 
-        # entraînement fold
+        # entraînement fold (balancing + scaling + fit inside)
         mlp, le_fold, scaler = train_one_fold_mlp(
             X_train, y_train,
             balance_classes=balance_classes,
             none_ratio=none_ratio,
         )
 
-        # prédiction
+        # prédiction — le_fold peut ne pas contenir toutes les classes
         X_test_scaled = scaler.transform(X_test)
-
-        # ⚠️ le_fold peut ne pas contenir toutes les classes (si absent du train)
-        # On prédit dans l'espace le_fold, puis on remappe vers labels string.
         y_pred_enc = mlp.predict(X_test_scaled)
         y_pred = le_fold.inverse_transform(y_pred_enc)
 
-        # métriques (dans l'espace string, cohérent avec SVM script)
+        # métriques
         f1_macro = f1_score(y_test, y_pred, average="macro", zero_division=0)
         f1_weighted = f1_score(y_test, y_pred, average="weighted", zero_division=0)
 
-        print(f"  F1 macro:    {f1_macro:.3f}")
-        print(f"  F1 weighted: {f1_weighted:.3f}")
+        print(f"  F1-macro: {f1_macro:.3f}  |  F1-weighted: {f1_weighted:.3f}")
 
         fold_results.append({
             "fold": fold_idx + 1,
             "f1_macro": float(f1_macro),
             "f1_weighted": float(f1_weighted),
+            "train_size": len(y_train),
+            "test_size": len(y_test),
             "y_true": y_test.tolist(),
             "y_pred": y_pred.tolist(),
             "test_participants": list(test_participants),
@@ -262,13 +265,20 @@ def print_cv_summary(fold_results: List[Dict[str, Any]], le: LabelEncoder) -> Tu
     f1w = [r["f1_weighted"] for r in fold_results]
 
     print("\n" + "=" * 60)
-    print("RÉSUMÉ CROSS-VALIDATION (MLP)")
+    print("CROSS-VALIDATION SUMMARY")
     print("=" * 60)
-    print(f"F1-macro    mean±std : {np.mean(f1m):.3f} ± {np.std(f1m):.3f}")
-    print(f"F1-weighted mean±std : {np.mean(f1w):.3f} ± {np.std(f1w):.3f}")
+
+    print(f"\n  Mean F1-macro:    {np.mean(f1m):.3f} +/- {np.std(f1m):.3f}")
+    print(f"  Mean F1-weighted: {np.mean(f1w):.3f} +/- {np.std(f1w):.3f}")
 
     all_y_true = np.concatenate([np.array(r["y_true"], dtype=object) for r in fold_results])
     all_y_pred = np.concatenate([np.array(r["y_pred"], dtype=object) for r in fold_results])
+
+    print(f"\n  Per-class report (aggregated across folds):")
+    print(classification_report(
+        all_y_true, all_y_pred,
+        labels=le.classes_, zero_division=0,
+    ))
 
     return all_y_true, all_y_pred
 
@@ -277,31 +287,19 @@ def print_cv_summary(fold_results: List[Dict[str, Any]], le: LabelEncoder) -> Tu
 # Sauvegarde matrice de confusion
 # =============================================================================
 
-def save_confusion_matrix(
-    y_true: np.ndarray,
-    y_pred: np.ndarray,
-    classes: np.ndarray,
-    out_path: Path,
-):
-    """Sauvegarde une matrice de confusion globale en PNG."""
-    cm = confusion_matrix(y_true, y_pred, labels=classes)
-
-    plt.figure(figsize=(10, 8))
-    plt.imshow(cm)
-    plt.title("Matrice de confusion (MLP)")
-    plt.xlabel("Prédit")
-    plt.ylabel("Réel")
-    plt.xticks(range(len(classes)), classes, rotation=45, ha="right")
-    plt.yticks(range(len(classes)), classes)
-
-    # valeurs
-    for i in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            plt.text(j, i, str(cm[i, j]), ha="center", va="center")
-
-    plt.tight_layout()
-    plt.savefig(out_path, dpi=200)
-    plt.close()
+def save_confusion_matrix(y_true, y_pred, class_names, output_path):
+    """Plot and save a confusion matrix as PNG."""
+    cm = confusion_matrix(y_true, y_pred, labels=class_names)
+    fig, ax = plt.subplots(figsize=(10, 8))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=class_names, yticklabels=class_names, ax=ax)
+    ax.set_xlabel('Predicted')
+    ax.set_ylabel('True')
+    ax.set_title('Confusion Matrix — MLP (aggregated CV)')
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
+    print(f"  Confusion matrix: {output_path}")
 
 
 # =============================================================================
@@ -318,8 +316,14 @@ def train_final_model(
     Entraîne un modèle final MLP sur toutes les données.
     Retourne le modèle + encoder + scaler pour déploiement.
     """
+    print("\n" + "=" * 60)
+    print("TRAINING FINAL MODEL (all data)")
+    print("=" * 60)
+
     if balance_classes:
+        n_before = len(y)
         X, y = downsample_none_class(X, y, none_label="none", none_ratio=none_ratio)
+        print(f"  Balancing: {n_before} -> {len(y)}")
 
     le = LabelEncoder()
     y_enc = le.fit_transform(y)
@@ -327,6 +331,7 @@ def train_final_model(
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
+    print(f"  Training MLP on {len(y)} samples...")
     mlp = MLPClassifier(
         hidden_layer_sizes=(512, 256),
         activation="relu",
@@ -341,6 +346,7 @@ def train_final_model(
         verbose=False,
     )
     mlp.fit(X_scaled, y_enc)
+    print(f"  Done.")
 
     return mlp, le, scaler
 
@@ -360,8 +366,10 @@ if __name__ == "__main__":
     none_ratio = train_cfg.get("none_ratio", 1.5)
     n_folds = train_cfg.get("n_folds", 5)
 
-    dataset_csv = output_dir / "dataset.csv"          # (gardé pour cohérence, mais non utilisé ici)
-    embeddings_file = output_dir / "all_embeddings.npz"
+    # Paths to prepared data (read from train/ subdirectory)
+    train_dir = output_dir / "train"
+    dataset_csv = train_dir / "dataset_train.csv"
+    embeddings_file = train_dir / "all_embeddings.npz"
 
     for f in [embeddings_file]:
         if not f.exists():
@@ -388,11 +396,9 @@ if __name__ == "__main__":
     segment_ids = data.get("segment_ids", None)
     participant_ids = data["participant_ids"]
 
-    print(f"  Embeddings:    {X.shape}")
-    print(f"  Labels:        {len(y)}")
-    print(f"  Participants:  {len(np.unique(participant_ids))}")
-    if segment_ids is not None:
-        print(f"  Segments:      {len(segment_ids)}")
+    print(f"  Embeddings:   {X.shape}")
+    print(f"  Labels:       {len(y)}")
+    print(f"  Participants: {len(np.unique(participant_ids))}")
 
     # -------------------------------------------------------------------------
     # Cross-validation
@@ -430,16 +436,31 @@ if __name__ == "__main__":
     print(f"  Scaler:           {mlp_dir / 'scaler.pkl'}")
     print(f"  Label encoder:    {mlp_dir / 'label_encoder.pkl'}")
 
-    # Sauvegarde résumé CV
+    # Save CV results summary
     summary = {
-        "n_folds": n_folds,
-        "f1_macro_mean": float(np.mean([r["f1_macro"] for r in fold_results])),
-        "f1_macro_std": float(np.std([r["f1_macro"] for r in fold_results])),
-        "f1_weighted_mean": float(np.mean([r["f1_weighted"] for r in fold_results])),
-        "f1_weighted_std": float(np.std([r["f1_weighted"] for r in fold_results])),
+        'n_folds': n_folds,
+        'f1_macro_mean': float(np.mean([r['f1_macro'] for r in fold_results])),
+        'f1_macro_std': float(np.std([r['f1_macro'] for r in fold_results])),
+        'f1_weighted_mean': float(np.mean([r['f1_weighted'] for r in fold_results])),
+        'f1_weighted_std': float(np.std([r['f1_weighted'] for r in fold_results])),
+        'folds': [
+            {
+                'fold': r['fold'],
+                'f1_macro': float(r['f1_macro']),
+                'f1_weighted': float(r['f1_weighted']),
+                'test_participants': r['test_participants'],
+            }
+            for r in fold_results
+        ],
     }
-    with open(mlp_dir / "cv_summary_mlp.json", "w", encoding="utf-8") as f:
+    with open(mlp_dir / "cv_results_mlp.json", "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
+    print(f"  CV results:       {mlp_dir / 'cv_results_mlp.json'}")
 
-    print("\nTERMINE ✓")
+    print(f"  Output log:       {mlp_dir / 'mlp_output.txt'}")
+
+    print("\n" + "=" * 60)
+    print("TRAINING TERMINE")
+    print("=" * 60)
+
     tee.close()

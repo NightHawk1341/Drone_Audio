@@ -1,0 +1,99 @@
+============================================================
+EVALUATE — Model evaluation on test set
+============================================================
+
+Loading ground truth...
+  Segments:     1408
+  Participants: 9
+  Distribution:
+    none        :  850 ( 60.4%)
+    forward     :  193 ( 13.7%)
+    yawright    :   76 (  5.4%)
+    down        :   63 (  4.5%)
+    yawleft     :   58 (  4.1%)
+    up          :   56 (  4.0%)
+    left        :   46 (  3.3%)
+    right       :   38 (  2.7%)
+    backward    :   28 (  2.0%)
+
+Models to evaluate: SVM, MLP
+
+  SVM Results:
+    Accuracy:    0.836
+    F1-macro:    0.735
+    F1-weighted: 0.843
+
+  Per-class report:
+              precision    recall  f1-score   support
+
+    backward       0.53      0.82      0.65        28
+        down       0.73      0.89      0.80        63
+     forward       0.81      0.90      0.85       193
+        left       0.64      0.63      0.64        46
+        none       0.96      0.85      0.90       850
+       right       0.64      0.74      0.68        38
+          up       0.80      0.86      0.83        56
+     yawleft       0.61      0.72      0.66        58
+    yawright       0.52      0.72      0.61        76
+
+    accuracy                           0.84      1408
+   macro avg       0.69      0.79      0.74      1408
+weighted avg       0.86      0.84      0.84      1408
+
+  Confusion matrix: B:\Document - Disk B\GitHub\Drone_Audio\models\evaluation\confusion_matrix_eval_svm.png
+  Results JSON:     B:\Document - Disk B\GitHub\Drone_Audio\models\evaluation\eval_svm.json
+
+  MLP Results:
+    Accuracy:    0.866
+    F1-macro:    0.774
+    F1-weighted: 0.868
+
+  Per-class report:
+              precision    recall  f1-score   support
+
+    backward       0.88      0.75      0.81        28
+        down       0.67      0.83      0.74        63
+     forward       0.89      0.89      0.89       193
+        left       0.58      0.70      0.63        46
+        none       0.94      0.91      0.92       850
+       right       0.79      0.79      0.79        38
+          up       0.86      0.86      0.86        56
+     yawleft       0.59      0.66      0.62        58
+    yawright       0.70      0.71      0.71        76
+
+    accuracy                           0.87      1408
+   macro avg       0.77      0.79      0.77      1408
+weighted avg       0.87      0.87      0.87      1408
+
+  Confusion matrix: B:\Document - Disk B\GitHub\Drone_Audio\models\evaluation\confusion_matrix_eval_mlp.png
+  Results JSON:     B:\Document - Disk B\GitHub\Drone_Audio\models\evaluation\eval_mlp.json
+
+============================================================
+MODEL COMPARISON (test set)
+============================================================
+  Metric                      SVM        MLP
+  ------------------------------------------
+  Accuracy                  0.836      0.866
+  F1-macro                  0.735      0.774
+  F1-weighted               0.843      0.868
+
+  Per-class F1                SVM        MLP
+  ------------------------------------------
+  backward                  0.648      0.808
+  down                      0.800      0.738
+  forward                   0.850      0.889
+  left                      0.637      0.634
+  none                      0.903      0.923
+  right                     0.683      0.789
+  up                        0.828      0.857
+  yawleft                   0.661      0.623
+  yawright                  0.608      0.706
+
+  Comparison JSON: B:\Document - Disk B\GitHub\Drone_Audio\models\evaluation\comparison.json
+
+  Output log:      B:\Document - Disk B\GitHub\Drone_Audio\models\evaluation\evaluation_output.txt
+
+============================================================
+EVALUATION TERMINEE
+============================================================
+Results: B:\Document - Disk B\GitHub\Drone_Audio\models\evaluation

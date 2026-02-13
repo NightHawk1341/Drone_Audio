@@ -3,7 +3,14 @@
 # Parse TextGrids → segment audio → extract wav2vec2 embeddings
 # =============================================================================
 """
-Prepares the full dataset (no train/test split) for model training scripts.
+Prepares the dataset for model training and evaluation.
+
+Steps:
+    1. Parse TextGrid annotations → full dataset.csv
+    2. Split participants 85/15 into train/test sets (speaker-independent)
+    3. Segment audio for train participants → train/audio_segments/
+    4. Extract wav2vec2 embeddings for train → train/all_embeddings.npz
+    5. Copy raw audio for test participants → test/audio/
 
 Usage:
     python prepare_data.py                   # uses config.yaml in same directory
@@ -11,6 +18,7 @@ Usage:
 """
 
 from pathlib import Path
+import shutil
 import sys
 import warnings
 from typing import List, Dict
@@ -19,6 +27,7 @@ import numpy as np
 import yaml
 import soundfile as sf
 import librosa
+from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 
@@ -235,7 +244,7 @@ def parse_annotations(textgrid_dir: Path, audio_dir: Path, output_csv: Path,
                       tier_name: str = "commands",
                       skip_if_cached: bool = True) -> pd.DataFrame:
     """Parse TextGrid files and produce a dataset CSV with participant info."""
-    print("\n[1/3] Parsing des annotations TextGrid...")
+    print("\n[1/5] Parsing des annotations TextGrid...")
 
     if skip_if_cached and output_csv.exists():
         print(f"  -> Cache trouve: {output_csv}")
@@ -273,7 +282,7 @@ def parse_annotations(textgrid_dir: Path, audio_dir: Path, output_csv: Path,
 def segment_audio(df: pd.DataFrame, audio_dir: Path, output_dir: Path,
                   skip_if_cached: bool = True):
     """Segment audio files to 16 kHz WAV clips named by segment_id."""
-    print("\n[2/3] Segmentation des fichiers audio...")
+    print("\n[3/5] Segmentation des fichiers audio...")
 
     output_dir.mkdir(exist_ok=True, parents=True)
 
@@ -331,7 +340,7 @@ def extract_embeddings(df: pd.DataFrame, segments_dir: Path, output_file: Path,
     import torch
     from transformers import Wav2Vec2FeatureExtractor, Wav2Vec2Model
 
-    print("\n[3/3] Extraction des embeddings wav2vec2...")
+    print("\n[4/5] Extraction des embeddings wav2vec2...")
 
     if skip_if_cached and output_file.exists():
         print(f"  -> Cache trouve: {output_file}")
@@ -409,6 +418,62 @@ def extract_embeddings(df: pd.DataFrame, segments_dir: Path, output_file: Path,
 
 
 # =============================================================================
+# STEP: SPLIT PARTICIPANTS
+# =============================================================================
+
+def split_participants(df: pd.DataFrame, test_size: float = 0.15,
+                       random_seed: int = 42):
+    """Split unique participant IDs into train/test sets."""
+    print(f"\n[2/5] Split participants (test_size={test_size}, seed={random_seed})...")
+
+    participants = df['participant_id'].unique()
+    train_pids, test_pids = train_test_split(
+        participants, test_size=test_size, random_state=random_seed,
+    )
+
+    df_train = df[df['participant_id'].isin(train_pids)].copy()
+    df_test = df[df['participant_id'].isin(test_pids)].copy()
+
+    print(f"  Train: {len(train_pids)} participants, {len(df_train)} segments")
+    print(f"  Test:  {len(test_pids)} participants, {len(df_test)} segments")
+
+    return df_train, df_test, sorted(train_pids), sorted(test_pids)
+
+
+# =============================================================================
+# STEP: COPY TEST AUDIO
+# =============================================================================
+
+def copy_test_audio(df_test: pd.DataFrame, audio_dir: Path, output_dir: Path,
+                    skip_if_cached: bool = True):
+    """Copy raw (unsegmented) audio files for test participants."""
+    print("\n[5/5] Copie des fichiers audio test (bruts)...")
+
+    output_dir.mkdir(exist_ok=True, parents=True)
+
+    audio_files = df_test['audio_file'].unique()
+    copied, skipped = 0, 0
+
+    for audio_file in sorted(audio_files):
+        src = audio_dir / audio_file
+        dst = output_dir / audio_file
+
+        if skip_if_cached and dst.exists():
+            skipped += 1
+            continue
+
+        if not src.exists():
+            warnings.warn(f"Fichier audio source manquant: {src}")
+            continue
+
+        shutil.copy2(src, dst)
+        copied += 1
+
+    print(f"  Fichiers copies: {copied}, deja en cache: {skipped}")
+    print(f"  Total dans {output_dir}: {len(list(output_dir.glob('*.wav')))}")
+
+
+# =============================================================================
 # MAIN
 # =============================================================================
 
@@ -426,31 +491,64 @@ if __name__ == "__main__":
 
     skip_cached = prep.get("skip_if_cached", True)
     tier_name = prep.get("tier_name", "commands")
+    test_size = prep.get("test_size", 0.15)
+    random_seed = prep.get("random_seed", 42)
 
     dataset_csv = output_dir / "dataset.csv"
-    segments_dir = output_dir / "audio_segments"
-    embeddings_file = output_dir / "all_embeddings.npz"
+
+    # Train outputs
+    train_dir = output_dir / "train"
+    train_dir.mkdir(exist_ok=True, parents=True)
+    train_segments_dir = train_dir / "audio_segments"
+    train_embeddings_file = train_dir / "all_embeddings.npz"
+    train_csv = train_dir / "dataset_train.csv"
+
+    # Test outputs
+    test_dir = output_dir / "test"
+    test_dir.mkdir(exist_ok=True, parents=True)
+    test_csv = test_dir / "dataset_test.csv"
+    test_audio_dir = test_dir / "audio"
 
     print("=" * 70)
-    print("PREPARE DATA: TextGrid -> Segments -> Embeddings")
+    print("PREPARE DATA: TextGrid -> Split -> Segments -> Embeddings")
     print("=" * 70)
 
-    # Step 1: Parse
+    # Step 1: Parse all annotations
     df = parse_annotations(
         textgrid_dir, audio_dir, dataset_csv,
         tier_name=tier_name, skip_if_cached=skip_cached,
     )
 
-    # Step 2: Segment audio
-    segment_audio(df, audio_dir, segments_dir, skip_if_cached=skip_cached)
+    # Step 2: Split participants into train/test
+    df_train, df_test, train_pids, test_pids = split_participants(
+        df, test_size=test_size, random_seed=random_seed,
+    )
 
-    # Step 3: Extract embeddings
-    extract_embeddings(df, segments_dir, embeddings_file, skip_if_cached=skip_cached)
+    # Save train/test CSVs
+    train_csv.parent.mkdir(exist_ok=True, parents=True)
+    df_train.to_csv(train_csv, index=False, encoding='utf-8')
+    test_csv.parent.mkdir(exist_ok=True, parents=True)
+    df_test.to_csv(test_csv, index=False, encoding='utf-8')
+    print(f"  Saved: {train_csv}")
+    print(f"  Saved: {test_csv}")
+
+    # Step 3: Segment audio (train only)
+    segment_audio(df_train, audio_dir, train_segments_dir, skip_if_cached=skip_cached)
+
+    # Step 4: Extract embeddings (train only)
+    extract_embeddings(df_train, train_segments_dir, train_embeddings_file,
+                       skip_if_cached=skip_cached)
+
+    # Step 5: Copy raw audio for test participants
+    copy_test_audio(df_test, audio_dir, test_audio_dir, skip_if_cached=skip_cached)
 
     print("\n" + "=" * 70)
     print("PREPARATION TERMINEE")
     print("=" * 70)
     print(f"Sortie: {output_dir}")
-    print(f"  - dataset.csv          ({len(df)} segments)")
-    print(f"  - audio_segments/      (WAV 16 kHz)")
-    print(f"  - all_embeddings.npz   (wav2vec2 embeddings)")
+    print(f"  - dataset.csv              ({len(df)} segments, all participants)")
+    print(f"  - train/dataset_train.csv  ({len(df_train)} segments, {len(train_pids)} participants)")
+    print(f"  - train/audio_segments/    (WAV 16 kHz)")
+    print(f"  - train/all_embeddings.npz (wav2vec2 embeddings)")
+    print(f"  - test/dataset_test.csv    ({len(df_test)} segments, {len(test_pids)} participants)")
+    print(f"  - test/audio/              (raw WAV files)")
