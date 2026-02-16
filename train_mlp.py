@@ -120,7 +120,7 @@ def downsample_none_class(
         return X, y
 
     # calcule le plafond
-    other_labels, other_counts = np.unique(y[other_idx], return_counts=True)
+    _, other_counts = np.unique(y[other_idx], return_counts=True)
     if len(other_counts) == 0:
         # cas pathologique : tout est none
         return X, y

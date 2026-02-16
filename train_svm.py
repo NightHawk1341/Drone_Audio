@@ -54,7 +54,7 @@ def balance_none_class(X, y, groups, none_ratio: float = 1.5):
         return X, y, groups
 
     # Find size of the largest non-none class
-    other_labels, other_counts = np.unique(y[mask_other], return_counts=True)
+    _, other_counts = np.unique(y[mask_other], return_counts=True)
     max_other = int(other_counts.max())
     max_none = int(max_other * none_ratio)
 

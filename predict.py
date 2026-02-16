@@ -25,6 +25,7 @@ import argparse
 import sys
 import numpy as np
 import pandas as pd
+import json
 import yaml
 import librosa
 import joblib
@@ -50,7 +51,7 @@ def load_config(path: str = None) -> dict:
 # =============================================================================
 
 def detect_segments(audio_dir: Path, top_db: float = 30.0,
-                    min_duration: float = 0.1, max_duration: float = 5.0):
+                    min_duration: float = 0.2, max_duration: float = 2.0):
     """Detect speech segments in all WAV files using energy-based VAD.
 
     Uses librosa.effects.split to find non-silent intervals, then filters
@@ -227,6 +228,40 @@ def save_predictions(df: pd.DataFrame, segment_ids, y_pred, output_path: Path):
     return pred_df
 
 
+def save_commands_json(df: pd.DataFrame, segment_ids, y_pred, output_path: Path):
+    """Save client-facing JSON with drone commands grouped by audio file.
+
+    Excludes 'none' predictions (silence/noise). Timestamps rounded to
+    centisecond precision. Segments ordered by start time within each file.
+    """
+    pred_map = dict(zip(segment_ids, y_pred))
+
+    commands_by_file: dict[str, list] = {}
+    for _, row in df.iterrows():
+        sid = row['segment_id']
+        if sid not in pred_map:
+            continue
+        cmd = pred_map[sid]
+        if cmd == 'none':
+            continue
+        audio_file = row['audio_file']
+        commands_by_file.setdefault(audio_file, []).append({
+            'start': round(float(row['start']), 2),
+            'end': round(float(row['end']), 2),
+            'command': cmd,
+        })
+
+    for segs in commands_by_file.values():
+        segs.sort(key=lambda s: s['start'])
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(commands_by_file, f, indent=2, ensure_ascii=False)
+
+    n_cmds = sum(len(v) for v in commands_by_file.values())
+    print(f"  Saved: {output_path} ({n_cmds} commands, {len(commands_by_file)} files)")
+
+
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -247,10 +282,10 @@ if __name__ == "__main__":
                              "instead of VAD (for evaluation)")
     parser.add_argument("--top-db", type=float, default=30.0,
                         help="VAD silence threshold in dB below peak (default: 30)")
-    parser.add_argument("--min-dur", type=float, default=0.1,
-                        help="Min segment duration in seconds (default: 0.1)")
-    parser.add_argument("--max-dur", type=float, default=5.0,
-                        help="Max segment duration in seconds (default: 5.0)")
+    parser.add_argument("--min-dur", type=float, default=0.2,
+                        help="Min segment duration in seconds (default: 0.2)")
+    parser.add_argument("--max-dur", type=float, default=2.0,
+                        help="Max segment duration in seconds (default: 2.0)")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -334,14 +369,12 @@ if __name__ == "__main__":
         print(f"\nPredicting with {model_type.upper()}...")
         y_pred = predict_with_model(X_test, model_dir, model_type)
 
-        pred_path = pred_dir / f"predictions_{model_type}.csv"
-        save_predictions(df_segments, segment_ids, y_pred, pred_path)
-
-        # Quick distribution
-        unique, counts = np.unique(y_pred, return_counts=True)
-        print(f"  Prediction distribution:")
-        for cmd, cnt in sorted(zip(unique, counts), key=lambda x: -x[1]):
-            print(f"    {cmd:12s}: {cnt:4d}")
+        if args.use_ground_truth:
+            pred_path = pred_dir / f"predictions_{model_type}.csv"
+            save_predictions(df_segments, segment_ids, y_pred, pred_path)
+        else:
+            json_path = pred_dir / f"commands_{model_type}.json"
+            save_commands_json(df_segments, segment_ids, y_pred, json_path)
 
     print("\n" + "=" * 60)
     print("PREDICTION TERMINEE")
