@@ -1,0 +1,28 @@
+# VoiceStick — Developer Version
+#
+# Train your own drone-command classifiers from annotated audio data.
+#
+# Quick start:
+#   1. Place .TextGrid files in data/textgrid/ and matching .wav files in data/audio/
+#   2. Run the pipeline:
+#        python prepare_data.py        # parse → split → segment → embed
+#        python train_svm.py           # train SVM with cross-validation
+#        python train_mlp.py           # train MLP with cross-validation
+#        python predict.py             # predict on held-out test audio
+#        python evaluate.py            # evaluate predictions vs ground truth
+
+paths:
+  textgrid_dir: "data/textgrid"    # Praat TextGrid annotation files (.TextGrid)
+  audio_dir: "data/audio"          # Raw audio recordings (.wav, 48 kHz)
+  output_dir: "output"             # All pipeline outputs (models, predictions, evaluation)
+
+data_preparation:
+  tier_name: "commands"    # TextGrid tier containing command annotations
+  skip_if_cached: true     # Reuse existing intermediate files if present
+  test_size: 0.15          # Fraction of participants held out for testing (85/15 split)
+  random_seed: 42          # Seed for reproducible train/test split
+
+training:
+  balance_classes: true    # Subsample the "none" class to reduce imbalance
+  none_ratio: 1.0          # Max ratio of "none" samples vs largest command class
+  n_folds: 5               # Number of cross-validation folds (GroupKFold by participant)

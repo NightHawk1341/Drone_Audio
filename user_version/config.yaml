@@ -1,0 +1,13 @@
+# VoiceStick — Drone Command Prediction
+#
+# Quick start:
+#   1. Place your .wav audio files in the "data/" folder
+#   2. Run: python predict.py
+#   3. Find results in output/predictions/
+
+paths:
+  models_dir: "models"    # Pre-trained classifiers (SVM, MLP)
+  data_dir: "data"        # Your .wav audio files go here
+  output_dir: "output"    # Predictions saved here
+
+# VAD settings can be overridden via CLI flags (see: python predict.py -h)
