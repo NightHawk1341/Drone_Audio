@@ -1,0 +1,99 @@
+============================================================
+EVALUATE — Model evaluation on test set
+============================================================
+
+Loading ground truth...
+  Segments:     1408
+  Participants: 9
+  Distribution:
+    none        :  850 ( 60.4%)
+    forward     :  193 ( 13.7%)
+    yawright    :   76 (  5.4%)
+    down        :   63 (  4.5%)
+    yawleft     :   58 (  4.1%)
+    up          :   56 (  4.0%)
+    left        :   46 (  3.3%)
+    right       :   38 (  2.7%)
+    backward    :   28 (  2.0%)
+
+Models to evaluate: SVM, MLP
+
+  SVM Results:
+    Accuracy:    0.828
+    F1-macro:    0.727
+    F1-weighted: 0.836
+
+  Per-class report:
+              precision    recall  f1-score   support
+
+    backward       0.52      0.82      0.64        28
+        down       0.71      0.89      0.79        63
+     forward       0.79      0.89      0.84       193
+        left       0.62      0.61      0.62        46
+        none       0.97      0.84      0.90       850
+       right       0.61      0.74      0.67        38
+          up       0.78      0.88      0.82        56
+     yawleft       0.60      0.76      0.67        58
+    yawright       0.52      0.72      0.61        76
+
+    accuracy                           0.83      1408
+   macro avg       0.68      0.79      0.73      1408
+weighted avg       0.86      0.83      0.84      1408
+
+  Confusion matrix: output\evaluation\confusion_matrix_eval_svm.png
+  Results JSON:     output\evaluation\eval_svm.json
+
+  MLP Results:
+    Accuracy:    0.841
+    F1-macro:    0.719
+    F1-weighted: 0.845
+
+  Per-class report:
+              precision    recall  f1-score   support
+
+    backward       0.68      0.75      0.71        28
+        down       0.63      0.89      0.74        63
+     forward       0.91      0.82      0.86       193
+        left       0.54      0.74      0.62        46
+        none       0.94      0.90      0.92       850
+       right       0.76      0.50      0.60        38
+          up       0.89      0.86      0.87        56
+     yawleft       0.67      0.52      0.58        58
+    yawright       0.47      0.67      0.55        76
+
+    accuracy                           0.84      1408
+   macro avg       0.72      0.74      0.72      1408
+weighted avg       0.86      0.84      0.85      1408
+
+  Confusion matrix: output\evaluation\confusion_matrix_eval_mlp.png
+  Results JSON:     output\evaluation\eval_mlp.json
+
+============================================================
+MODEL COMPARISON (test set)
+============================================================
+  Metric                      SVM        MLP
+  ------------------------------------------
+  Accuracy                  0.828      0.841
+  F1-macro                  0.727      0.719
+  F1-weighted               0.836      0.845
+
+  Per-class F1                SVM        MLP
+  ------------------------------------------
+  backward                  0.639      0.712
+  down                      0.789      0.737
+  forward                   0.837      0.863
+  left                      0.615      0.624
+  none                      0.897      0.919
+  right                     0.667      0.603
+  up                        0.824      0.873
+  yawleft                   0.672      0.583
+  yawright                  0.608      0.554
+
+  Comparison JSON: output\evaluation\comparison.json
+
+  Output log:      output\evaluation\evaluation_output.txt
+
+============================================================
+EVALUATION TERMINEE
+============================================================
+Results: output\evaluation

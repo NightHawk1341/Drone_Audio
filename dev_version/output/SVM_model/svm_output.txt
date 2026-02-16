@@ -1,0 +1,86 @@
+============================================================
+TRAIN SVM — 5-fold GroupKFold cross-validation
+============================================================
+
+Chargement des donnees...
+  Embeddings:   (7539, 1024)
+  Labels:       7539
+  Participants: 49
+
+Lancement du 5-fold GroupKFold...
+
+  Participants totaux: 49
+  Classes: [np.str_('backward'), np.str_('down'), np.str_('forward'), np.str_('left'), np.str_('none'), np.str_('right'), np.str_('up'), np.str_('yawleft'), np.str_('yawright')]
+
+  --- Fold 1/5 ---
+  Test participants (10): [np.str_('01_04_25_14_31_12'), np.str_('02_04_25_13_12_58'), np.str_('02_04_25_14_15_30'), np.str_('02_04_25_16_25_21'), np.str_('09_04_25_13_19_13'), np.str_('10_04_25_10_36_50'), np.str_('10_04_25_11_21_05'), np.str_('10_04_25_15_16_49'), np.str_('31_03_25_11_05_01'), np.str_('31_03_25_16_18_26')]
+  Train: 6022 samples | Test: 1517 samples
+  Balancing: 6022 -> 3616 (none subsampled)
+  F1-macro: 0.766  |  F1-weighted: 0.870
+
+  --- Fold 2/5 ---
+  Test participants (10): [np.str_('01_04_25_13_16_07'), np.str_('01_04_25_15_07_47'), np.str_('02_04_25_11_17_05'), np.str_('02_04_25_15_10_26'), np.str_('02_04_25_15_18_45'), np.str_('09_04_25_10_33_16'), np.str_('10_04_25_15_23_44'), np.str_('31_03_25_10_19_55'), np.str_('31_03_25_13_23_10'), np.str_('31_03_25_16_06_35')]
+  Train: 6010 samples | Test: 1529 samples
+  Balancing: 6010 -> 3476 (none subsampled)
+  F1-macro: 0.723  |  F1-weighted: 0.808
+
+  --- Fold 3/5 ---
+  Test participants (10): [np.str_('01_04_25_15_58_31'), np.str_('02_04_25_10_14_36'), np.str_('02_04_25_11_21_52'), np.str_('02_04_25_13_19_06'), np.str_('09_04_25_11_18_44'), np.str_('09_04_25_13_28_44'), np.str_('10_04_25_13_14_05'), np.str_('10_04_25_15_53_11'), np.str_('10_04_25_16_00_12'), np.str_('31_03_25_14_17_08')]
+  Train: 6016 samples | Test: 1523 samples
+  Balancing: 6016 -> 3733 (none subsampled)
+  F1-macro: 0.776  |  F1-weighted: 0.873
+
+  --- Fold 4/5 ---
+  Test participants (9): [np.str_('01_04_25_11_19_02'), np.str_('01_04_25_11_28_32'), np.str_('01_04_25_14_37_21'), np.str_('09_04_25_11_11_47'), np.str_('09_04_25_14_15_28'), np.str_('10_04_25_13_05_45'), np.str_('31_03_25_09_25_59'), np.str_('31_03_25_13_29_25'), np.str_('31_03_25_15_14_17')]
+  Train: 6088 samples | Test: 1451 samples
+  Balancing: 6088 -> 3545 (none subsampled)
+  F1-macro: 0.741  |  F1-weighted: 0.824
+
+  --- Fold 5/5 ---
+  Test participants (10): [np.str_('01_04_25_10_27_14'), np.str_('01_04_25_14_02_53'), np.str_('01_04_25_14_09_37'), np.str_('01_04_25_15_17_09'), np.str_('02_04_25_10_24_28'), np.str_('02_04_25_14_19_42'), np.str_('09_04_25_10_21_56'), np.str_('09_04_25_14_20_05'), np.str_('31_03_25_11_15_00'), np.str_('31_03_25_15_19_41')]
+  Train: 6020 samples | Test: 1519 samples
+  Balancing: 6020 -> 3642 (none subsampled)
+  F1-macro: 0.756  |  F1-weighted: 0.869
+
+============================================================
+CROSS-VALIDATION SUMMARY
+============================================================
+
+  Mean F1-macro:    0.753 +/- 0.019
+  Mean F1-weighted: 0.849 +/- 0.027
+
+  Per-class report (aggregated across folds):
+              precision    recall  f1-score   support
+
+    backward       0.63      0.83      0.71       152
+        down       0.70      0.86      0.77       384
+     forward       0.84      0.89      0.86      1229
+        left       0.80      0.70      0.75       322
+        none       0.95      0.86      0.90      4265
+       right       0.63      0.75      0.68       251
+          up       0.72      0.89      0.80       342
+     yawleft       0.71      0.76      0.73       239
+    yawright       0.57      0.68      0.62       355
+
+    accuracy                           0.84      7539
+   macro avg       0.73      0.80      0.76      7539
+weighted avg       0.86      0.84      0.85      7539
+
+  Confusion matrix: output\SVM_model\confusion_matrix_svm.png
+
+============================================================
+TRAINING FINAL MODEL (all data)
+============================================================
+  Balancing: 7539 -> 4503
+  Training SVM on 4503 samples...
+  Done. Support vectors: 3038
+
+  Modele sauvegarde: output\SVM_model\model_svm.pkl
+  Scaler:           output\SVM_model\scaler.pkl
+  Label encoder:    output\SVM_model\label_encoder.pkl
+  CV results:       output\SVM_model\cv_results_svm.json
+  Output log:       output\SVM_model\svm_output.txt
+
+============================================================
+TRAINING TERMINE
+============================================================
